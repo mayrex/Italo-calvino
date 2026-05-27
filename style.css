@@ -1,0 +1,3268 @@
+/* ==========================================================================
+   STILI DI PROGETTO: LA VALIGIA DEI MONDI DI CALVINO
+   ========================================================================== */
+
+/* 1. VARIABILI GLOBALI E CORES DE DESIGN */
+:root {
+    --color-beige-light: #f4efe6;
+    --color-beige-dark: #ede6d9;
+    --color-ink: #1c1a17;
+    --color-red: #8a1c14;
+    --color-gold: #c5a059;
+    --color-dark-bg: #0d0c0b;
+    --color-dark-card: #161514;
+    --color-dark-text: #ede6d9;
+
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Cormorant Garamond', serif;
+    --font-mono: 'Special Elite', monospace;
+
+    --transition-cinematic: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+    --transition-smooth: all 0.4s ease;
+}
+
+/* 2. STRUTTURA DI BASE E ARCHIVIO */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--color-beige-light);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    overflow: hidden;
+    /* Blocca lo scroll di default per renderlo interamente controllato */
+    width: 100vw;
+    height: 100vh;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 3. EFFETTO CARTA ANTICA / DISTURBO VISIVO */
+.paper-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background-color: var(--color-beige-light);
+    background-image:
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 0%, rgba(0, 0, 0, 0.03) 100%);
+}
+
+.paper-texture::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    opacity: 0.85;
+}
+
+.intro-grain {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.12'/%3E%3C/svg%3E");
+}
+
+/* 4. SCHERMATE DI TRANSIZIONE (SCREENS) */
+.screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(1.05);
+    transition: var(--transition-cinematic);
+    display: flex;
+    flex-direction: column;
+}
+
+.screen.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: scale(1);
+    z-index: 20;
+}
+
+/* 5. PRELOADER & SCHERMATA D'INGRESSO */
+#preloader {
+    background-color: var(--color-beige-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.intro-content {
+    max-width: 650px;
+    padding: 2.5rem;
+    border: 1px solid rgba(138, 28, 20, 0.15);
+    background: rgba(244, 239, 230, 0.8);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.05);
+    border-radius: 4px;
+    z-index: 5;
+    animation: fadeInIntro 1.5s ease-out;
+}
+
+.intro-category {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.25em;
+    color: var(--color-red);
+    margin-bottom: 1.5rem;
+}
+
+.intro-title {
+    font-family: var(--font-heading);
+    font-size: 2.8rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    line-height: 1.2;
+    letter-spacing: 0.05em;
+}
+
+.intro-title .italic {
+    font-family: var(--font-body);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 3.2rem;
+    color: var(--color-red);
+    display: block;
+    margin-top: 0.2rem;
+}
+
+.divider {
+    width: 60px;
+    height: 1px;
+    background-color: var(--color-gold);
+    margin: 2rem auto;
+}
+
+.intro-quote {
+    font-style: italic;
+    font-size: 1.25rem;
+    color: #4a453f;
+    margin-bottom: 2.5rem;
+}
+
+.quote-author {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-style: normal;
+    color: var(--color-gold);
+    margin-top: 0.8rem;
+    letter-spacing: 0.05em;
+}
+
+/* Pulsante Vintage Moderno */
+.btn-vintage {
+    background: none;
+    border: 1px solid var(--color-ink);
+    padding: 1.1rem 2.8rem;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    border-radius: 2px;
+}
+
+.btn-vintage .btn-text {
+    position: relative;
+    z-index: 3;
+}
+
+.btn-vintage .btn-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: var(--color-red);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+    z-index: 1;
+}
+
+.btn-vintage:hover {
+    color: var(--color-beige-light);
+    border-color: var(--color-red);
+    box-shadow: 0 10px 25px rgba(138, 28, 20, 0.2);
+}
+
+.btn-vintage:hover .btn-glow {
+    width: 300px;
+    height: 300px;
+}
+
+/* 6. CONTROLLI GLOBALI (MUTE/AUDIO) */
+#global-controls {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 100;
+}
+
+.control-icon {
+    background: none;
+    border: 1px solid rgba(28, 26, 23, 0.15);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: var(--color-ink);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(5px);
+    z-index: 101;
+}
+
+.control-icon:hover {
+    border-color: var(--color-red);
+    color: var(--color-red);
+    background-color: rgba(244, 239, 230, 0.5);
+    transform: scale(1.05);
+}
+
+/* 7. HUB PRINCIPALE (LA VALIGIA) */
+#hub-screen {
+    justify-content: space-between;
+    padding: 2.5rem;
+}
+
+.hub-header {
+    text-align: center;
+    z-index: 5;
+}
+
+.registry-number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--color-gold);
+    display: block;
+    margin-bottom: 0.6rem;
+}
+
+.hub-header h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-ink);
+}
+
+.line-decorator {
+    width: 150px;
+    height: 2px;
+    background-color: var(--color-red);
+    margin: 0.8rem auto 0;
+    position: relative;
+}
+
+.line-decorator::before,
+.line-decorator::after {
+    content: "✦";
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    color: var(--color-gold);
+}
+
+.line-decorator::before {
+    left: -15px;
+}
+
+.line-decorator::after {
+    right: -15px;
+}
+
+/* Contenitore Griglia Menu + Valigia */
+.hub-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    align-items: center;
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 5;
+    gap: 2rem;
+}
+
+/* Menu Laterale */
+.hub-menu {
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 15px;
+}
+
+.hub-menu::-webkit-scrollbar {
+    width: 4px;
+}
+
+.hub-menu::-webkit-scrollbar-track {
+    background: rgba(28, 26, 23, 0.05);
+    border-radius: 2px;
+}
+
+.hub-menu::-webkit-scrollbar-thumb {
+    background: var(--color-gold);
+    border-radius: 2px;
+}
+
+.hub-menu::-webkit-scrollbar-thumb:hover {
+    background: var(--color-red);
+}
+
+.hub-menu ul {
+    list-style: none;
+}
+
+.menu-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 1.2rem 1rem;
+    margin-bottom: 0.8rem;
+    cursor: pointer;
+    border-left: 2px solid transparent;
+    transition: var(--transition-smooth);
+}
+
+.menu-item .num {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--color-gold);
+    margin-right: 1.5rem;
+    font-weight: 700;
+    transition: var(--transition-smooth);
+}
+
+.menu-item .label-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.menu-item .title {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    letter-spacing: 0.05em;
+    transition: var(--transition-smooth);
+}
+
+.menu-item .sub {
+    font-size: 0.9rem;
+    color: #615a51;
+    margin-top: 0.2rem;
+    font-style: italic;
+}
+
+.menu-item:hover {
+    border-left-color: var(--color-red);
+    background-color: rgba(237, 230, 217, 0.4);
+    transform: translateX(10px);
+}
+
+.menu-item:hover .num {
+    color: var(--color-red);
+}
+
+.menu-item:hover .title {
+    color: var(--color-red);
+}
+
+/* Area Visiva Valigia */
+.hub-visual {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.suitcase-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 580px;
+}
+
+.svg-suitcase {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.12));
+}
+
+#suitcase-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.pulse-light {
+    animation: suitcaseGlow 3s infinite ease-in-out;
+}
+
+/* Hotspots Oggetti Fluttuanti */
+.suitcase-hotspot {
+    position: absolute;
+    z-index: 10;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    border-radius: 50%;
+    padding: 5px;
+    background: rgba(244, 239, 230, 0.8);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.suitcase-hotspot svg {
+    transition: var(--transition-smooth);
+}
+
+.suitcase-hotspot:hover {
+    transform: scale(1.2) translateY(-5px);
+    border-color: var(--color-red);
+    box-shadow: 0 15px 30px rgba(138, 28, 20, 0.25);
+    background: var(--color-beige-dark);
+}
+
+.suitcase-hotspot:hover svg {
+    filter: drop-shadow(0 0 8px rgba(197, 160, 89, 0.8));
+}
+
+/* Posizioni Fluttuanti Coordinate */
+.float-obj-1 {
+    top: 18%;
+    left: 8%;
+    animation: floating 6s infinite ease-in-out;
+}
+
+.float-obj-2 {
+    top: 12%;
+    right: 12%;
+    animation: floating 7s infinite ease-in-out 1s;
+}
+
+.float-obj-3 {
+    bottom: 42%;
+    left: -2%;
+    animation: floating 5.5s infinite ease-in-out 0.5s;
+}
+
+.float-obj-4 {
+    bottom: 48%;
+    right: -5%;
+    animation: floating 6.5s infinite ease-in-out 1.5s;
+}
+
+.float-obj-5 {
+    top: 48%;
+    left: 52%;
+    transform: translateX(-50%);
+    animation: floating 8s infinite ease-in-out 2s;
+}
+
+.float-obj-6 {
+    bottom: 12%;
+    left: 10%;
+    animation: floating 5.8s infinite ease-in-out 2.5s;
+}
+
+.float-obj-7 {
+    bottom: 8%;
+    right: 15%;
+    animation: floating 6.2s infinite ease-in-out 3s;
+}
+
+.float-obj-8 {
+    top: 6%;
+    left: 45%;
+    animation: floating 7.5s infinite ease-in-out 1.2s;
+}
+
+.float-obj-9 {
+    bottom: 25%;
+    right: 5%;
+    animation: floating 6.8s infinite ease-in-out 0.8s;
+}
+
+.float-obj-10 {
+    top: 30%;
+    right: 3%;
+    animation: floating 7.2s infinite ease-in-out 2.2s;
+}
+
+.float-obj-11 {
+    top: 2%;
+    right: 25%;
+    animation: floating 5.9s infinite ease-in-out 1.7s;
+}
+
+.float-obj-12 {
+    bottom: 5%;
+    left: 30%;
+    animation: floating 6.4s infinite ease-in-out 0.3s;
+}
+
+.hub-footer {
+    text-align: center;
+    z-index: 5;
+}
+
+.hub-footer p {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: #7c7265;
+}
+
+/* 8. CONTENITORE SEZIONE GENERICO */
+.world-section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 30;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(30px);
+    transition: var(--transition-cinematic);
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem;
+}
+
+.world-section.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+}
+
+.background-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.paper-theme {
+    background-color: var(--color-beige-light);
+    color: var(--color-ink);
+}
+
+.paper-theme::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.07'/%3E%3C/svg%3E");
+    opacity: 0.8;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.dark-theme {
+    background-color: var(--color-dark-bg);
+    color: var(--color-dark-text);
+}
+
+/* Header Sezione */
+.world-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(28, 26, 23, 0.1);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+    z-index: 5;
+    position: relative;
+}
+
+.world-header::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-red) 0%, transparent 100%);
+    opacity: 0.3;
+}
+
+.dark-theme .world-header {
+    border-bottom-color: rgba(237, 230, 217, 0.08);
+}
+
+.dark-theme .world-header::after {
+    background: linear-gradient(90deg, var(--color-gold) 0%, transparent 100%);
+}
+
+.btn-back {
+    background: none;
+    border: 1px solid var(--color-ink);
+    padding: 0.6rem 1.4rem;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--color-ink);
+    transition: var(--transition-smooth);
+    border-radius: 2px;
+}
+
+.btn-back.light {
+    border-color: var(--color-dark-text);
+    color: var(--color-dark-text);
+}
+
+.btn-back:hover {
+    color: var(--color-beige-light);
+    background-color: var(--color-red);
+    border-color: var(--color-red);
+}
+
+.btn-back.light:hover {
+    color: var(--color-dark-bg);
+    background-color: var(--color-gold);
+    border-color: var(--color-gold);
+}
+
+.world-title-box {
+    display: flex;
+    align-items: center;
+}
+
+.world-num {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    color: var(--color-red);
+    margin-right: 1rem;
+    font-weight: 700;
+}
+
+.world-num.light {
+    color: var(--color-gold);
+}
+
+.world-title-box h2 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    letter-spacing: 0.05em;
+    font-weight: 400;
+}
+
+/* ==========================================================================
+   SEZIONE 02 — PENSIERO E POETICA DI CALVINO
+   ========================================================================== */
+.pensiero-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2.5rem;
+    align-items: stretch;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.concepts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 1.5rem;
+    overflow-y: auto;
+    padding-right: 1rem;
+}
+
+.concept-card {
+    background: #eae3d3;
+    border: 1px solid rgba(28, 26, 23, 0.12);
+    border-radius: 8px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    position: relative;
+    overflow: hidden;
+}
+
+.concept-card:hover,
+.concept-card.selected {
+    border-color: var(--color-red);
+    box-shadow: 0 15px 30px rgba(138, 28, 20, 0.1);
+    transform: translateY(-5px);
+    background: #f4efe6;
+}
+
+.concept-icon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1.5rem;
+    transition: var(--transition-smooth);
+}
+
+.concept-card:hover .concept-icon {
+    transform: scale(1.1);
+}
+
+.concept-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: var(--color-ink);
+    margin-bottom: 0.8rem;
+    transition: var(--transition-smooth);
+}
+
+.concept-card:hover h3,
+.concept-card.selected h3 {
+    color: var(--color-red);
+}
+
+.concept-card p {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: #554e44;
+}
+
+.pensiero-panel {
+    background: #ede6d9;
+    border: 1px solid rgba(28, 26, 23, 0.1);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.pensiero-quote-display {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+}
+
+.quote-mark {
+    font-family: var(--font-heading);
+    font-size: 4rem;
+    color: rgba(197, 160, 89, 0.4);
+    line-height: 0;
+    margin-bottom: 2rem;
+}
+
+.quote-mark.end {
+    margin-top: 3rem;
+    margin-bottom: 0;
+}
+
+#pensiero-main-quote {
+    font-family: var(--font-body);
+    font-size: 1.4rem;
+    line-height: 1.8;
+    color: #3e3832;
+    transition: opacity 0.5s ease;
+}
+
+/* ==========================================================================
+   SEZIONE 03 — IL NEOREALISMO
+   ========================================================================== */
+.neorealismo-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 90px);
+    z-index: 5;
+    background: #dfd6c5;
+    border: 1px solid rgba(28, 26, 23, 0.2);
+    padding: 2rem;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.05);
+    overflow-y: auto;
+}
+
+.newspaper-layout {
+    display: grid;
+    grid-template-columns: 55% 45%;
+    gap: 3rem;
+    margin-top: 1rem;
+    border-top: 3px double #1c1a17;
+    border-bottom: 3px double #1c1a17;
+    padding: 2rem 0;
+}
+
+.article-headline {
+    font-family: var(--font-heading);
+    font-size: 2.2rem;
+    line-height: 1.1;
+    color: #1c1a17;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.article-meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    color: #4a3e35;
+    border-bottom: 1px solid #1c1a17;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.article-text {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: #2d2219;
+    margin-bottom: 1.5rem;
+    text-align: justify;
+}
+
+.article-text:first-of-type::first-letter {
+    font-size: 3.5rem;
+    float: left;
+    line-height: 0.8;
+    margin-right: 0.5rem;
+    font-family: var(--font-heading);
+    color: #8a1c14;
+}
+
+.vintage-photo-frame {
+    background: #e8e2d5;
+    padding: 10px 10px 40px 10px;
+    border: 1px solid rgba(28, 26, 23, 0.3);
+    box-shadow: 2px 4px 15px rgba(0, 0, 0, 0.1);
+    transform: rotate(2deg);
+}
+
+.vintage-svg {
+    width: 100%;
+    height: auto;
+    filter: sepia(0.4) contrast(1.1);
+}
+
+/* ==========================================================================
+   SEZIONE 04 — LA LEGGEREZZA E L'IMMAGINAZIONE
+   ========================================================================== */
+.leggerezza-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.floating-spheres-zone {
+    position: relative;
+    background: rgba(244, 239, 230, 0.3);
+    border: 1px solid rgba(197, 160, 89, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.light-sphere {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.8), rgba(244, 239, 230, 0.4) 40%, rgba(197, 160, 89, 0.1) 80%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px rgba(197, 160, 89, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    backdrop-filter: blur(2px);
+}
+
+.light-sphere:nth-child(1) {
+    top: 20%;
+    left: 20%;
+    animation: floating 8s infinite ease-in-out;
+}
+
+.light-sphere:nth-child(2) {
+    top: 50%;
+    right: 20%;
+    animation: floating 7s infinite ease-in-out 1s;
+}
+
+.light-sphere:nth-child(3) {
+    bottom: 20%;
+    left: 40%;
+    animation: floating 9s infinite ease-in-out 2s;
+}
+
+.light-sphere span {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    color: #615a51;
+    transition: var(--transition-smooth);
+}
+
+.light-sphere:hover {
+    transform: scale(1.1) translateY(-10px);
+    box-shadow: 0 15px 40px rgba(197, 160, 89, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.9);
+}
+
+.light-sphere:hover span,
+.light-sphere.selected span {
+    color: var(--color-red);
+}
+
+.leggerezza-panel {
+    background: #ede6d9;
+    border: 1px solid rgba(28, 26, 23, 0.1);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.feather-icon {
+    font-size: 2.5rem;
+    color: var(--color-gold);
+    margin-bottom: 1.5rem;
+    animation: floatIcon 4s infinite ease-in-out;
+}
+
+#leggerezza-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    color: var(--color-ink);
+}
+
+#leggerezza-text {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #4a423a;
+    margin-top: 1rem;
+    transition: opacity 0.5s ease;
+}
+
+/* ==========================================================================
+   SEZIONE 05 — IL RUOLO DEL LETTORE (METANARRAZIONE)
+   ========================================================================== */
+.metalettore-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 3rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.mirror-zone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.mirror-frame {
+    width: 320px;
+    height: 480px;
+    border: 4px solid var(--color-gold);
+    border-radius: 10px 10px 50% 50% / 10px 10px 20px 20px;
+    padding: 10px;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(197, 160, 89, 0.2);
+}
+
+.mirror-reflection {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
+    border-radius: 6px 6px 50% 50% / 6px 6px 16px 16px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mirror-reflection::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.05), transparent);
+    transform: skewX(-20deg);
+    animation: mirrorShine 8s infinite;
+}
+
+@keyframes mirrorShine {
+    0% {
+        left: -100%;
+    }
+
+    20% {
+        left: 200%;
+    }
+
+    100% {
+        left: 200%;
+    }
+}
+
+.reflection-text {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: rgba(237, 230, 217, 0.15);
+    letter-spacing: 0.2em;
+    transform: scaleX(-1);
+    /* Specchiato */
+}
+
+.meta-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.meta-prompt {
+    font-family: var(--font-body);
+    font-size: 1.4rem;
+    line-height: 1.8;
+    color: var(--color-dark-text);
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.meta-prompt p {
+    margin-bottom: 1.5rem;
+}
+
+.meta-actions {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.meta-btn {
+    flex: 1;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   SEZIONE 11 — IL CASTELLO DEI DESTINI INCROCIATI
+   ========================================================================== */
+.castello-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.tarot-table {
+    background: #1a1410;
+    border: 2px solid #2d2219;
+    border-radius: 8px;
+    box-shadow: inset 0 20px 50px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.4);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.table-texture {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='wood'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.05 0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23wood)' opacity='0.15'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.tarot-cards-ring {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tarot-card {
+    position: absolute;
+    width: 100px;
+    height: 160px;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid var(--color-gold);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-back {
+    background: #2d1b19;
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(197, 160, 89, 0.1) 5px, rgba(197, 160, 89, 0.1) 10px);
+}
+
+.card-back::after {
+    content: "☽";
+    color: var(--color-gold);
+    font-size: 2rem;
+    opacity: 0.5;
+}
+
+.card-front {
+    background: #e8e2d5;
+    transform: rotateY(180deg);
+    flex-direction: column;
+    padding: 10px;
+}
+
+.card-front svg {
+    width: 80%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    color: var(--color-ink);
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.tarot-card.revealed {
+    transform: rotateY(180deg) scale(1.2) translateY(-20px) !important;
+    z-index: 10;
+    box-shadow: 0 15px 35px rgba(197, 160, 89, 0.3);
+}
+
+.destiny-panel {
+    background: rgba(26, 20, 16, 0.85);
+    border: 1px solid rgba(197, 160, 89, 0.2);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    backdrop-filter: blur(10px);
+}
+
+.destiny-seal {
+    font-size: 2.5rem;
+    color: var(--color-gold);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#destiny-title {
+    text-align: center;
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    margin-bottom: 0.5rem;
+}
+
+.destiny-text-box {
+    flex: 1;
+    overflow-y: auto;
+    margin: 1.5rem 0;
+}
+
+.destiny-narrative {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #dfd6c5;
+    text-align: justify;
+    transition: opacity 0.5s ease;
+}
+
+.destiny-combo-status {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.15em;
+    color: var(--color-gold);
+    text-align: center;
+    border-top: 1px dashed rgba(197, 160, 89, 0.3);
+    padding-top: 1.5rem;
+}
+
+
+/* ==========================================================================
+   SEZIONE 02 — RAMO / ALBERO (IL BARONE RAMPANTE)
+   ========================================================================== */
+.barone-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.tree-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(237, 230, 217, 0.25);
+    border-radius: 8px;
+    border: 1px solid rgba(28, 26, 23, 0.05);
+    overflow: hidden;
+}
+
+.svg-tree {
+    height: 95%;
+    width: auto;
+}
+
+.tree-branch {
+    cursor: pointer;
+}
+
+.branch-path-glow {
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.tree-branch:hover .branch-path-glow {
+    opacity: 0.75;
+    stroke: var(--color-gold);
+}
+
+.branch-hotspot {
+    fill: transparent;
+    transition: var(--transition-smooth);
+}
+
+.tree-branch:hover .branch-hotspot {
+    fill: rgba(197, 160, 89, 0.15);
+    stroke: var(--color-gold);
+    stroke-width: 1;
+}
+
+.branch-label {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    fill: var(--color-ink);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    text-anchor: middle;
+    letter-spacing: 0.05em;
+}
+
+.tree-branch:hover .branch-label {
+    opacity: 1;
+    transform: translateY(-5px);
+    fill: var(--color-red);
+}
+
+.tree-branch.selected .branch-path-glow {
+    opacity: 1;
+    stroke: var(--color-red);
+}
+
+.tree-branch.selected .branch-label {
+    opacity: 1;
+    fill: var(--color-red);
+    font-weight: bold;
+}
+
+/* Pannello del Barone */
+.branch-panel {
+    background: #ede6d9;
+    border: 1px solid rgba(28, 26, 23, 0.1);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: center;
+}
+
+.leaf-seal {
+    font-size: 2.5rem;
+    color: var(--color-red);
+    margin-bottom: 1.2rem;
+    text-align: center;
+    line-height: 1;
+}
+
+.branch-panel h3 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    text-align: center;
+    color: var(--color-ink);
+}
+
+.tree-quote-text {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: #4a453f;
+    text-align: justify;
+    margin: 1.5rem 0;
+}
+
+.instruction-text {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-gold);
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
+.leaves-counter {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-align: center;
+    color: var(--color-ink);
+    letter-spacing: 0.1em;
+    background: rgba(28, 26, 23, 0.05);
+    padding: 0.6rem 0;
+    border-radius: 4px;
+    margin-top: 1.5rem;
+}
+
+.leaves-counter span {
+    color: var(--color-red);
+    font-weight: bold;
+}
+
+/* ==========================================================================
+   SEZIONE 03 — STELLA / PIANETA (LE COSMICOMICHE)
+   ========================================================================== */
+.cosmiche-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.galaxy-viewport {
+    background: #050505;
+    border: 1px solid rgba(237, 230, 217, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    perspective: 1000px;
+}
+
+.celestial-body {
+    position: absolute;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 5;
+}
+
+.planet-sphere {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: inset -15px -15px 30px rgba(0, 0, 0, 0.9);
+    transition: var(--transition-smooth);
+}
+
+.planet-glow {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+    transform: translate(-15px, -15px);
+    transition: var(--transition-smooth);
+    mix-blend-mode: screen;
+}
+
+.planet-name {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: rgba(237, 230, 217, 0.6);
+    margin-top: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: var(--transition-smooth);
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+}
+
+/* Texture 3D-like dei pianeti */
+.luna-texture {
+    background: radial-gradient(circle at 30% 30%, #f4efe6 0%, #b2a694 40%, #5c5244 80%, #0d0c0b 100%);
+    box-shadow: inset -8px -8px 15px rgba(0, 0, 0, 0.9), 0 0 15px rgba(197, 160, 89, 0.2);
+}
+
+.nebulosa-texture {
+    background: radial-gradient(circle at 30% 30%, #ff6b6b 0%, #8a1c14 45%, #420602 75%, #000000 100%);
+    box-shadow: inset -8px -8px 15px rgba(0, 0, 0, 0.9), 0 0 15px rgba(138, 28, 20, 0.25);
+}
+
+.planet-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 110px;
+    height: 18px;
+    border: 1px solid rgba(138, 28, 20, 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    pointer-events: none;
+    box-shadow: 0 0 10px rgba(138, 28, 20, 0.1);
+}
+
+.luce-texture {
+    background: radial-gradient(circle at 30% 30%, #fffbe0 0%, #c5a059 40%, #75551f 75%, #0d0c0b 100%);
+    box-shadow: inset -8px -8px 15px rgba(0, 0, 0, 0.9), 0 0 25px rgba(255, 251, 224, 0.35);
+}
+
+/* Hover Pianeti */
+.celestial-body:hover {
+    transform: scale(1.18);
+}
+
+.celestial-body:hover .planet-glow {
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.45) 0%, transparent 70%);
+}
+
+.celestial-body:hover .planet-name {
+    color: var(--color-gold);
+    text-shadow: 0 0 8px rgba(197, 160, 89, 0.6);
+}
+
+.celestial-body.selected .planet-sphere {
+    animation: slowOrbitSpin 2s infinite linear;
+    border: 1px solid var(--color-gold);
+}
+
+.celestial-body.selected .planet-name {
+    color: var(--color-gold);
+}
+
+/* Terminale delle Cosmicomiche */
+.cosmic-terminal {
+    background: var(--color-dark-card);
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.terminal-header {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(197, 160, 89, 0.1);
+    padding-bottom: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--color-gold);
+    border-radius: 50%;
+    margin-right: 0.8rem;
+    box-shadow: 0 0 6px var(--color-gold);
+    animation: simpleBlink 1.5s infinite;
+}
+
+.terminal-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-dark-text);
+    letter-spacing: 0.1em;
+}
+
+.terminal-body {
+    flex: 1;
+    background: #070707;
+    border: 1px solid rgba(197, 160, 89, 0.05);
+    padding: 1.2rem;
+    border-radius: 4px;
+    overflow-y: auto;
+}
+
+.narrative-output {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--color-dark-text);
+    text-align: left;
+    white-space: pre-line;
+}
+
+.terminal-footer {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: rgba(237, 230, 217, 0.4);
+    margin-top: 1rem;
+}
+
+/* ==========================================================================
+   SEZIONE 04 — SE UNA NOTTE D'INVERNO UN VIAGGIATORE
+   ========================================================================== */
+.book-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+    position: relative;
+}
+
+/* Layout del Libro Fisico */
+.book-layout {
+    background: #e2d9ca;
+    border: 12px solid #5a483a;
+    border-radius: 6px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15), inset 0 0 40px rgba(0, 0, 0, 0.15);
+    display: grid;
+    grid-template-columns: 1fr 10px 1fr;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-left,
+.page-right {
+    background: var(--color-beige-light);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    height: 100%;
+}
+
+.page-divider-shadow {
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.12) 100%);
+    height: 100%;
+    z-index: 3;
+}
+
+.page-corner-torn {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(135deg, transparent 50%, #ede6d9 50%);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.registry-stamp {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    border: 2px solid rgba(138, 28, 20, 0.25);
+    color: rgba(138, 28, 20, 0.45);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    padding: 0.2rem 0.5rem;
+    transform: rotate(6deg);
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+}
+
+.book-page-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.chapter-num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-gold);
+    display: block;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.1em;
+}
+
+.book-page-content h3 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-ink);
+}
+
+.story-paragraph {
+    font-family: var(--font-body);
+    font-size: 1.28rem;
+    line-height: 1.65;
+    text-align: justify;
+    margin-bottom: 1.2rem;
+    color: var(--color-ink);
+}
+
+.page-number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: rgba(28, 26, 23, 0.4);
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.interaction-trigger-box {
+    margin-top: 1.8rem;
+    text-align: right;
+}
+
+.btn-vintage.small {
+    padding: 0.6rem 1.6rem;
+    font-size: 0.75rem;
+}
+
+/* Glitch Overlay */
+.glitch-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    mix-blend-mode: difference;
+}
+
+.glitch-active .glitch-overlay {
+    opacity: 0.9;
+    animation: staticGlitch 0.2s infinite;
+}
+
+/* Pannello Meta-narrativo di Errore */
+.glitch-panel {
+    background: #ede6d9;
+    border: 1px dashed var(--color-red);
+    padding: 2.2rem;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 15px 35px rgba(138, 28, 20, 0.05);
+}
+
+.glitch-warning-title {
+    font-family: var(--font-mono);
+    font-size: 1.05rem;
+    color: var(--color-red);
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.glitch-warning-desc {
+    font-family: var(--font-body);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #4a453f;
+    margin-bottom: 2rem;
+    text-align: justify;
+}
+
+.glitch-choices {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.choice-btn {
+    background: none;
+    border: 1px solid rgba(28, 26, 23, 0.15);
+    padding: 0.9rem 1.2rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    text-align: left;
+    border-radius: 4px;
+}
+
+.choice-btn:hover {
+    border-color: var(--color-red);
+    color: var(--color-red);
+    background-color: rgba(138, 28, 20, 0.05);
+    transform: translateX(5px);
+}
+
+/* Glitch classe di testo */
+.glitch-text-mode {
+    font-family: var(--font-mono) !important;
+    font-size: 1rem !important;
+    color: var(--color-red) !important;
+    animation: fontFlicker 0.4s infinite;
+    letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   SEZIONE 05 — ARMATURA VUOTA (IL CAVALIERE INESISTENTE)
+   ========================================================================== */
+.cavaliere-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.spotlight-effect {
+    position: absolute;
+    top: -50px;
+    left: 30%;
+    width: 250px;
+    height: 700px;
+    background: linear-gradient(180deg, rgba(197, 160, 89, 0.18) 0%, rgba(13, 12, 11, 0) 100%);
+    filter: blur(15px);
+    pointer-events: none;
+    z-index: 2;
+    transform: rotate(8deg);
+    transform-origin: top center;
+}
+
+.armor-visual-container {
+    background: #070707;
+    border: 1px solid rgba(237, 230, 217, 0.06);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.armor-svg-wrapper {
+    height: 90%;
+    width: auto;
+    position: relative;
+}
+
+.svg-armor {
+    height: 100%;
+    width: auto;
+}
+
+.armor-path {
+    stroke: rgba(237, 230, 217, 0.65);
+    stroke-width: 2;
+    fill: none;
+    transition: stroke 0.6s ease, filter 0.6s ease, stroke-width 0.4s ease;
+}
+
+.armor-visual-container:hover .armor-path {
+    stroke: var(--color-gold);
+    filter: drop-shadow(0 0 4px rgba(197, 160, 89, 0.5));
+    stroke-width: 2.2;
+}
+
+/* Dissoluzione / Particelle */
+.armor-path.dissolved {
+    stroke: rgba(197, 160, 89, 0.08);
+    stroke-width: 0.5;
+    filter: blur(1px);
+}
+
+/* Pannello Esistenziale */
+.existential-panel {
+    background: var(--color-dark-card);
+    border: 1px solid rgba(197, 160, 89, 0.15);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border-radius: 6px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.knight-sigil {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--color-gold);
+    border-radius: 50%;
+    margin: 0 auto 1.5rem;
+    position: relative;
+}
+
+.knight-sigil::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 6px;
+    height: 6px;
+    background-color: var(--color-gold);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--color-gold);
+}
+
+.existential-panel h3 {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    text-align: center;
+    color: var(--color-dark-text);
+}
+
+.existential-text {
+    font-family: var(--font-body);
+    font-size: 1.3rem;
+    line-height: 1.75;
+    color: rgba(237, 230, 217, 0.85);
+    text-align: justify;
+    margin: 2rem 0;
+}
+
+.existential-text .action-hint {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--color-gold);
+    text-align: center;
+    letter-spacing: 0.05em;
+}
+
+.identity-status {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    text-align: center;
+    color: rgba(237, 230, 217, 0.4);
+    letter-spacing: 0.08em;
+}
+
+/* ==========================================================================
+   ANIMAZIONI E TRANSIZIONI CHIAVE
+   ========================================================================== */
+
+@keyframes floating {
+    0% {
+        transform: translate(0, 0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translate(0, -10px) rotate(2deg);
+    }
+
+    100% {
+        transform: translate(0, 0px) rotate(0deg);
+    }
+}
+
+@keyframes suitcaseGlow {
+    0% {
+        stroke: rgba(197, 160, 89, 0.4);
+        stroke-width: 4px;
+        filter: drop-shadow(0 0 2px rgba(197, 160, 89, 0.4));
+    }
+
+    50% {
+        stroke: rgba(138, 28, 20, 0.85);
+        stroke-width: 9px;
+        filter: drop-shadow(0 0 10px rgba(138, 28, 20, 0.85));
+    }
+
+    100% {
+        stroke: rgba(197, 160, 89, 0.4);
+        stroke-width: 4px;
+        filter: drop-shadow(0 0 2px rgba(197, 160, 89, 0.4));
+    }
+}
+
+@keyframes pulseRing {
+    0% {
+        r: 35px;
+        stroke-opacity: 0.8;
+    }
+
+    50% {
+        r: 50px;
+        stroke-opacity: 0.2;
+    }
+
+    100% {
+        r: 35px;
+        stroke-opacity: 0.8;
+    }
+}
+
+@keyframes slowSpin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slowOrbitSpin {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(180deg) scale(1.02);
+    }
+
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+@keyframes simpleBlink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.2;
+    }
+}
+
+@keyframes fadeInIntro {
+    0% {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Glitch static screen overlay */
+@keyframes staticGlitch {
+    0% {
+        background-color: rgba(28, 26, 23, 0.08);
+    }
+
+    20% {
+        background-color: rgba(138, 28, 20, 0.12);
+        filter: skewX(10deg);
+    }
+
+    40% {
+        background-color: rgba(28, 26, 23, 0.06);
+        filter: skewX(-5deg);
+    }
+
+    60% {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    80% {
+        background-color: rgba(197, 160, 89, 0.1);
+        filter: skewY(2deg);
+    }
+
+    100% {
+        background-color: rgba(28, 26, 23, 0.08);
+    }
+}
+
+@keyframes fontFlicker {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    33% {
+        opacity: 0.8;
+    }
+
+    34% {
+        opacity: 0.1;
+    }
+
+    36% {
+        opacity: 0.8;
+    }
+
+    70% {
+        opacity: 0.9;
+    }
+
+    71% {
+        opacity: 0.2;
+    }
+
+    73% {
+        opacity: 0.9;
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVITÀ PER SMARTPHONE E TABLET
+   ========================================================================== */
+@media (max-width: 1024px) {
+    body {
+        font-size: 1rem;
+        overflow-y: auto;
+        /* Permetti lo scroll verticale su mobile se necessario */
+    }
+
+    .screen {
+        overflow-y: auto;
+    }
+
+    #hub-screen {
+        padding: 1.5rem;
+    }
+
+    .hub-container {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding-top: 1.5rem;
+    }
+
+    .hub-menu {
+        order: 2;
+    }
+
+    .hub-visual {
+        order: 1;
+        max-width: 420px;
+        margin: 0 auto;
+    }
+
+    .menu-item {
+        padding: 0.8rem;
+    }
+
+    /* Sezioni Responsive Generiche */
+    .world-section {
+        padding: 1.5rem;
+        overflow-y: auto;
+    }
+
+    /* Nuove sezioni */
+    .pensiero-container,
+    .neorealismo-container,
+    .leggerezza-container,
+    .metalettore-container,
+    .castello-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1.5rem;
+    }
+
+    .newspaper-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .tarot-table,
+    .mirror-frame,
+    .floating-spheres-zone {
+        height: 380px;
+    }
+
+    /* Il Barone Rampante */
+    .barone-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1.5rem;
+    }
+
+    .tree-visual {
+        height: 380px;
+    }
+
+    /* Le Cosmicomiche */
+    .cosmiche-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1.5rem;
+    }
+
+    .galaxy-viewport {
+        height: 380px;
+    }
+
+    .celestial-body.planet-luna {
+        left: 10% !important;
+        top: 15% !important;
+    }
+
+    .celestial-body.planet-nebulosa {
+        left: 40% !important;
+        top: 50% !important;
+    }
+
+    .celestial-body.planet-luce {
+        left: 70% !important;
+        top: 15% !important;
+    }
+
+    /* Se una Notte d'Inverno */
+    .book-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1.5rem;
+    }
+
+    .book-layout {
+        grid-template-columns: 1fr;
+        border-width: 6px;
+    }
+
+    .page-left {
+        border-bottom: 2px dashed rgba(28, 26, 23, 0.15);
+    }
+
+    .page-divider-shadow {
+        display: none;
+    }
+
+    /* Il Cavaliere Inesistente */
+    .cavaliere-container {
+        grid-template-columns: 1fr;
+        height: auto;
+        gap: 1.5rem;
+    }
+
+    .armor-visual-container {
+        height: 380px;
+    }
+}
+
+@media (max-width: 480px) {
+    .intro-title {
+        font-size: 2.2rem;
+    }
+
+    .intro-title .italic {
+        font-size: 2.5rem;
+    }
+
+    .btn-vintage {
+        padding: 0.9rem 2rem;
+        font-size: 0.85rem;
+    }
+
+    #btn-mute {
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .world-title-box h2 {
+        font-size: 1.3rem;
+    }
+
+    .world-num {
+        font-size: 1.8rem;
+    }
+}
+
+/* ==========================================================================
+   SEZIONE 06 — IL VISCONTE DIMEZZATO
+   ========================================================================== */
+.visconte-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.visconte-visual-box {
+    background: rgba(237, 230, 217, 0.25);
+    border: 1px solid rgba(28, 26, 23, 0.08);
+    border-radius: 8px;
+    box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.02);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.visconte-character-wrapper {
+    position: relative;
+    width: 320px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: var(--transition-cinematic);
+}
+
+.char-half {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    cursor: pointer;
+    transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    z-index: 5;
+}
+
+.char-left {
+    left: 0;
+    transform-origin: right center;
+}
+
+.char-right {
+    right: 0;
+    transform-origin: left center;
+}
+
+.svg-half {
+    width: 100%;
+    height: 85%;
+}
+
+.svg-half path,
+.svg-half circle {
+    transition: var(--transition-smooth);
+}
+
+.half-glow {
+    position: absolute;
+    top: 15%;
+    width: 130%;
+    height: 70%;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0;
+    transition: var(--transition-smooth);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.char-left .half-glow {
+    right: 0;
+    background: radial-gradient(circle, rgba(138, 28, 20, 0.15) 0%, transparent 70%);
+}
+
+.char-right .half-glow {
+    left: 0;
+    background: radial-gradient(circle, rgba(197, 160, 89, 0.2) 0%, transparent 70%);
+}
+
+/* Hover e Selezioni */
+.char-left:hover .half-glow,
+.char-left.selected .half-glow {
+    opacity: 1;
+}
+
+.char-right:hover .half-glow,
+.char-right.selected .half-glow {
+    opacity: 1;
+}
+
+.char-left:hover svg path,
+.char-left.selected svg path {
+    stroke: var(--color-red);
+    filter: drop-shadow(0 0 5px rgba(138, 28, 20, 0.4));
+}
+
+.char-right:hover svg path,
+.char-right.selected svg path {
+    stroke: var(--color-gold);
+    filter: drop-shadow(0 0 5px rgba(197, 160, 89, 0.4));
+}
+
+.half-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-align: center;
+    margin-top: 10px;
+    opacity: 0.5;
+    transition: var(--transition-smooth);
+}
+
+.char-left:hover .half-title,
+.char-left.selected .half-title {
+    color: var(--color-red);
+    opacity: 1;
+}
+
+.char-right:hover .half-title,
+.char-right.selected .half-title {
+    color: var(--color-gold);
+    opacity: 1;
+}
+
+.mirror-fracture {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 20px;
+    height: 100%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
+    transition: var(--transition-cinematic);
+}
+
+.mirror-fracture svg path {
+    transition: var(--transition-smooth);
+}
+
+.mirror-fracture.glowing svg path {
+    stroke: var(--color-gold);
+    filter: drop-shadow(0 0 8px var(--color-gold));
+    stroke-width: 6;
+}
+
+/* Pannello Dualità */
+.dual-panel {
+    background: #ede6d9;
+    border: 1px solid rgba(28, 26, 23, 0.1);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.dual-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.split-seal {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1);
+    display: inline-block;
+    width: fit-content;
+}
+
+.visconte-text-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.visconte-quote-text {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #3e3832;
+    text-align: justify;
+}
+
+.dual-status {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--color-gold);
+    margin-top: 1.5rem;
+    border-top: 1px dashed rgba(28, 26, 23, 0.15);
+    padding-top: 1rem;
+}
+
+/* ==========================================================================
+   SEZIONE 07 — IL SENTIERO DEI NIDI DI RAGNO
+   ========================================================================== */
+.sentiero-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 60% 40%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.forest-visual {
+    background: linear-gradient(180deg, #162211 0%, #080d06 100%);
+    border: 1px solid rgba(197, 160, 89, 0.12);
+    border-radius: 8px;
+    box-shadow: inset 0 10px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.forest-depth-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.6) 100%);
+    pointer-events: none;
+    z-index: 3;
+}
+
+.svg-forest {
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    opacity: 0.3;
+}
+
+.svg-forest path {
+    stroke: var(--color-beige-dark);
+}
+
+.forest-hotspot {
+    position: absolute;
+    z-index: 10;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.item-circle {
+    fill: rgba(28, 26, 23, 0.55);
+    stroke: var(--color-gold);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 2;
+    transition: var(--transition-smooth);
+}
+
+.forest-hotspot svg path {
+    transition: var(--transition-smooth);
+}
+
+.forest-hotspot:hover {
+    transform: scale(1.18);
+}
+
+.forest-hotspot:hover .item-circle {
+    fill: rgba(138, 28, 20, 0.25);
+    stroke: var(--color-red);
+    stroke-width: 2;
+    stroke-dasharray: none;
+    filter: drop-shadow(0 0 8px rgba(138, 28, 20, 0.6));
+}
+
+.forest-hotspot:hover svg path {
+    stroke: var(--color-red);
+    filter: drop-shadow(0 0 4px rgba(138, 28, 20, 0.5));
+}
+
+.forest-hotspot.selected .item-circle {
+    fill: rgba(138, 28, 20, 0.35);
+    stroke: var(--color-red);
+    stroke-width: 2.5;
+    stroke-dasharray: none;
+    filter: drop-shadow(0 0 10px rgba(138, 28, 20, 0.7));
+}
+
+.forest-hotspot.selected svg path {
+    stroke: var(--color-red);
+}
+
+/* Coordinate Hotspot Bosco */
+.item-pistola {
+    bottom: 25%;
+    left: 20%;
+}
+
+.item-nido {
+    bottom: 15%;
+    right: 25%;
+}
+
+.item-fazzoletto {
+    top: 35%;
+    left: 35%;
+}
+
+.item-ciliegie {
+    top: 22%;
+    right: 30%;
+}
+
+/* Pannello Bosco */
+.forest-panel {
+    background: #ede6d9;
+    border: 1px solid rgba(28, 26, 23, 0.1);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.forest-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.spider-seal {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.forest-quote-text {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #3e3832;
+    text-align: justify;
+}
+
+.forest-counter {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--color-gold);
+    margin-top: 1.5rem;
+    border-top: 1px dashed rgba(28, 26, 23, 0.15);
+    padding-top: 1rem;
+}
+
+/* ==========================================================================
+   SEZIONE 08 — VITA E PENSIERO DI CALVINO
+   ========================================================================== */
+.vita-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 2.5rem;
+    height: calc(100% - 90px);
+    z-index: 5;
+}
+
+.timeline-viewport {
+    background: #ede6d9;
+    border: 1px solid rgba(28, 26, 23, 0.1);
+    border-radius: 8px;
+    box-shadow: inset 0 10px 30px rgba(0, 0, 0, 0.03);
+    padding: 3rem 2rem;
+    overflow-y: auto;
+    position: relative;
+}
+
+.timeline-viewport::-webkit-scrollbar {
+    width: 5px;
+}
+
+.timeline-viewport::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.timeline-viewport::-webkit-scrollbar-thumb {
+    background: var(--color-gold);
+    border-radius: 3px;
+}
+
+.timeline-line {
+    position: absolute;
+    top: 0;
+    left: 40px;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--color-gold) 0%, rgba(197, 160, 89, 0.15) 100%);
+    z-index: 1;
+}
+
+.timeline-node {
+    position: relative;
+    margin-bottom: 4rem;
+    padding-left: 60px;
+    z-index: 2;
+    opacity: 0.35;
+    transform: translateY(30px);
+    transition: all 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.timeline-node.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.node-marker {
+    position: absolute;
+    left: 31px;
+    top: 8px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-beige-light);
+    border: 3px solid var(--color-gold);
+    z-index: 3;
+    transition: var(--transition-smooth);
+}
+
+.timeline-node.visible .node-marker {
+    border-color: var(--color-red);
+    background: var(--color-beige-dark);
+    box-shadow: 0 0 10px rgba(138, 28, 20, 0.5);
+    transform: scale(1.15);
+}
+
+.node-content {
+    background: rgba(244, 239, 230, 0.85);
+    border: 1px solid rgba(28, 26, 23, 0.08);
+    border-radius: 6px;
+    padding: 1.6rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+    transition: var(--transition-smooth);
+    display: grid;
+    grid-template-columns: 68% 32%;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.timeline-node.visible:hover .node-content {
+    background: #fdfbf7;
+    border-color: rgba(138, 28, 20, 0.2);
+    box-shadow: 0 15px 35px rgba(138, 28, 20, 0.06);
+}
+
+.node-year {
+    font-family: var(--font-mono);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-red);
+    display: block;
+    margin-bottom: 0.4rem;
+}
+
+.node-title {
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.02em;
+}
+
+.node-desc {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: #4a423a;
+    text-align: justify;
+}
+
+.node-media {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.polaroid-frame {
+    background: #ffffff;
+    padding: 8px 8px 22px 8px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.07);
+    border: 1px solid rgba(28, 26, 23, 0.06);
+    transform: rotate(-3deg);
+    transition: var(--transition-smooth);
+    max-width: 155px;
+    width: 100%;
+}
+
+.timeline-node:nth-child(even) .polaroid-frame {
+    transform: rotate(3deg);
+}
+
+.timeline-node:hover .polaroid-frame {
+    transform: rotate(0deg) scale(1.1);
+    box-shadow: 0 18px 36px rgba(138, 28, 20, 0.12);
+    border-color: rgba(197, 160, 89, 0.3);
+}
+
+/* Pannello Biografia */
+.vita-panel {
+    background: #ede6d9;
+    border: 1px solid rgba(28, 26, 23, 0.1);
+    box-shadow: 10px 20px 40px rgba(0, 0, 0, 0.06);
+    border-radius: 6px;
+    padding: 2.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.vita-panel::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+}
+
+.feather-seal {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.biography-sidebar-text {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1.8;
+    color: #433c35;
+    text-align: justify;
+}
+
+.map-connection-status {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--color-gold);
+    margin-top: 1.5rem;
+    border-top: 1px dashed rgba(28, 26, 23, 0.15);
+    padding-top: 1rem;
+    line-height: 1.45;
+}
+
+/* ==========================================================================
+   RESPONSIVITÀ PER LE NUOVE SEZIONI
+   ========================================================================== */
+@media (max-width: 992px) {
+
+    .visconte-container,
+    .sentiero-container,
+    .vita-container {
+        grid-template-columns: 1fr;
+        height: calc(100% - 90px);
+        overflow-y: auto;
+        gap: 1.5rem;
+    }
+
+    .visconte-visual-box,
+    .forest-visual,
+    .timeline-viewport {
+        height: 380px;
+        min-height: 350px;
+    }
+
+    .node-content {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .node-media {
+        justify-content: flex-start;
+    }
+
+    .polaroid-frame {
+        max-width: 140px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hub-container {
+        grid-template-columns: 1fr;
+        overflow-y: auto;
+        max-height: calc(100vh - 120px);
+        padding-bottom: 2rem;
+    }
+
+    .hub-menu {
+        max-height: 250px;
+    }
+
+    .hub-visual {
+        height: 320px;
+    }
+
+    .suitcase-hotspot {
+        width: 44px;
+        height: 44px;
+        padding: 2px;
+    }
+
+    .suitcase-hotspot svg {
+        width: 100%;
+        height: auto;
+    }
+}
+
+/* ==========================================================================
+   TRANSIZIONI CINEMATOGRAFICHE & EASTER EGG STYLES
+   ========================================================================== */
+.cinematic-quote-transition {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(13, 12, 11, 0.95);
+    color: var(--color-beige-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    animation: fadeInTransition 0.8s forwards cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: all;
+    backdrop-filter: blur(15px);
+}
+
+.quote-transition-text {
+    max-width: 600px;
+    padding: 2rem;
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    line-height: 1.6;
+    text-align: center;
+    color: var(--color-beige-light);
+    border-left: 2px solid var(--color-gold);
+    animation: scaleInTransition 1.0s forwards cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cinematic-quote-transition.fade-out {
+    animation: fadeOutTransition 0.9s forwards cubic-bezier(0.25, 1, 0.5, 1);
+    pointer-events: none;
+}
+
+@keyframes fadeInTransition {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutTransition {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes scaleInTransition {
+    from {
+        transform: scale(0.95) translateY(15px);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Easter Egg Styling */
+.easter-egg-overlay {
+    background: rgba(13, 12, 11, 0.97) !important;
+}
+
+.easter-egg-box {
+    border: 1px solid var(--color-gold) !important;
+    background: var(--color-dark-card);
+    border-radius: 6px;
+    text-align: left !important;
+    max-width: 550px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+    animation: scaleInTransition 0.6s forwards cubic-bezier(0.25, 1, 0.5, 1);
+    padding: 2.5rem;
+}
+
+.egg-meta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-red);
+    letter-spacing: 0.1em;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+
+.egg-text {
+    font-family: var(--font-body);
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: var(--color-dark-text);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+    min-height: 80px;
+}
+
+/* ==========================================================================
+   STILI GLOBALI MANCANTI E KEYFRAMES SUPPLEMENTARI
+   ========================================================================== */
+
+/* Animazione rotazione per il sigillo Visconte alla ricomposizione */
+@keyframes spin {
+    from {
+        transform: rotate(0deg) scale(1.1);
+    }
+
+    to {
+        transform: rotate(360deg) scale(1.2);
+    }
+}
+
+.split-seal.spin {
+    animation: spin 1.6s cubic-bezier(0.25, 1, 0.5, 1) 1 forwards;
+}
+
+/* Testi istruzione / hint condivisi tra sezioni */
+.instruction-text {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-gold);
+    letter-spacing: 0.08em;
+    display: block;
+    margin-top: 1.2rem;
+    opacity: 0.75;
+}
+
+.action-hint {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-gold);
+    letter-spacing: 0.06em;
+    opacity: 0.65;
+    display: block;
+    margin-top: 0.8rem;
+}
+
+/* Pulsante Vintage variante piccola (usata in glitch panel & easter egg) */
+.btn-vintage.small {
+    padding: 0.7rem 1.8rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+}
+
+/* Transizione opacità per il box di connessione timeline */
+.map-connection-status {
+    transition: opacity 0.4s ease;
+}
+
+/* Stile per il pannello foresta in dark-mode: altezza h3 condivisa */
+.forest-panel h3,
+.dual-panel h3,
+.vita-panel h3 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-ink);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+/* Stile per il pannello foresta: panel-divider già definito ma serve
+   anche su forest-panel e dual-panel con colore specifico */
+.forest-panel .panel-divider,
+.dual-panel .panel-divider {
+    height: 1px;
+    background-color: rgba(28, 26, 23, 0.1);
+    margin: 1.2rem 0;
+}
+
+/* Tooltip titolo hotspot visibile su hover */
+.forest-hotspot[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: -28px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--color-beige-light);
+    background: rgba(28, 26, 23, 0.85);
+    padding: 3px 8px;
+    border-radius: 2px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 20;
+}
+
+/* Raccordo visivo: i nodi timeline inizialmente nascosti hanno una
+   transizione di opacity e transform per l'apparizione cinematica */
+.timeline-node {
+    transition: opacity 0.9s cubic-bezier(0.25, 1, 0.5, 1),
+        transform 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Rafforzo del hover sulla valigia per i nuovi oggetti */
+.float-obj-6:hover,
+.float-obj-7:hover,
+.float-obj-8:hover {
+    box-shadow: 0 20px 40px rgba(138, 28, 20, 0.3);
+}
+
+/* ==========================================
+   SEZIONE 11 — IL CASTELLO DEI DESTINI INCROCIATI
+   ========================================== */
+.castello-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    height: 100%;
+    padding: 2rem 4rem;
+    position: relative;
+    z-index: 10;
+}
+
+.tarot-table {
+    position: relative;
+    width: 60%;
+    max-width: 800px;
+    height: 600px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+}
+
+.tarot-cards-ring {
+    position: relative;
+    width: 100px;
+    height: 160px;
+    transform-style: preserve-3d;
+    transform: scale(1.3);
+}
+
+.tarot-card {
+    position: absolute;
+    width: 100px;
+    height: 160px;
+    top: 50%;
+    left: 50%;
+    margin-top: -80px;
+    margin-left: -50px;
+    cursor: pointer;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.6s ease;
+    transform-style: preserve-3d;
+    border-radius: 6px;
+}
+
+.tarot-card:not(.revealed):hover {
+    box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4);
+    z-index: 50 !important;
+    filter: brightness(1.2);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.card-back {
+    background: repeating-linear-gradient(45deg, #1c1a17, #1c1a17 10px, #2d2219 10px, #2d2219 20px);
+    border: 2px solid #c5a059;
+    transform: rotateY(0deg);
+}
+
+.card-front {
+    background: #ede6d9;
+    border: 2px solid #1c1a17;
+    transform: rotateY(180deg);
+}
+
+.tarot-card.revealed .card-back {
+    transform: rotateY(-180deg);
+}
+
+.tarot-card.revealed .card-front {
+    transform: rotateY(0deg);
+}
+
+/* Allineamento in alto per le carte scelte */
+.tarot-card.slot-1 {
+    transform: translate(-120px, -125px) rotate(0deg) scale(1) !important;
+    z-index: 100 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tarot-card.slot-2 {
+    transform: translate(0px, -125px) rotate(0deg) scale(1) !important;
+    z-index: 101 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.tarot-card.slot-3 {
+    transform: translate(120px, -125px) rotate(0deg) scale(1) !important;
+    z-index: 102 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card-title {
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    margin-top: 15px;
+    color: #1c1a17;
+    text-align: center;
+    font-weight: bold;
+}
+
+.destiny-panel {
+    width: 40%;
+    background: rgba(26, 20, 16, 0.9);
+    border: 2px solid #2d2219;
+    padding: 3rem 2rem;
+    text-align: center;
+    max-width: 500px;
+    border-radius: 8px;
+    color: var(--color-beige-light);
+    box-shadow: inset 0 20px 50px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.destiny-seal {
+    font-size: 2rem;
+    color: var(--color-gold);
+    margin-bottom: 0.5rem;
+}
+
+.destiny-text-box {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.destiny-narrative {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    line-height: 1.6;
+    transition: opacity 0.4s ease;
+}
+
+.destiny-combo-status {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-gold);
+    margin-top: 1.5rem;
+    letter-spacing: 0.1em;
+}
+
+@media (max-width: 992px) {
+    .castello-container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 2rem;
+    }
+
+    .tarot-table {
+        width: 100%;
+        height: 350px;
+    }
+
+    .destiny-panel {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .tarot-cards-ring {
+        transform: scale(0.9);
+    }
+}
